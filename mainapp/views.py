@@ -1,13 +1,5 @@
 from django.shortcuts import render
-from django.test import TestCase
 import json
-
-class prod(TestCase):
-    fixtures = ['products.json', 'products']
-
-    def setUp(self):
-        # Test definitions as before.
-        call_setup_methods()
 
 # Create your views here.
 def index(request):
