@@ -32,4 +32,4 @@ class Command(BaseCommand):
             new_product.save()
 
 
-super_user = User.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains')
+#super_user = User.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=33)
