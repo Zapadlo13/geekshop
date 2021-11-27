@@ -5,7 +5,8 @@ from mainapp.models import Product,ProductCategory
 def index(request):
     context = {
         'title': 'GeekShop',
-        'products': Product.objects.all()
+        'products': Product.objects.all(),
+        'username':request.user
     }
     return render(request, 'mainapp/index.html', context)
 
