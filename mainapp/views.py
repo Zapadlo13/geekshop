@@ -1,18 +1,18 @@
 from django.shortcuts import render
-from mainapp.models import Product,ProductCategory
+from mainapp.models import Product, ProductCategory
+
 
 # Create your views here.
 def index(request):
     context = {
         'title': 'GeekShop',
         'products': Product.objects.all(),
-        'username':request.user
+        'username': request.user
     }
     return render(request, 'mainapp/index.html', context)
 
 
 def products(request):
-
     context = {
         'title': 'GeekShop - Каталог',
         'products': Product.objects.all(),
