@@ -7,7 +7,6 @@ def index(request):
     context = {
         'title': 'GeekShop',
         'products': Product.objects.all(),
-        'username': request.user
     }
     return render(request, 'mainapp/index.html', context)
 
@@ -19,3 +18,5 @@ def products(request):
         'categories': ProductCategory.objects.all(),
     }
     return render(request, 'mainapp/products.html', context)
+
+
