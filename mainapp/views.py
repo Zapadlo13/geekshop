@@ -20,3 +20,11 @@ def products(request):
     return render(request, 'mainapp/products.html', context)
 
 
+def detail(request,id):
+    context = {
+        'title': 'GeekShop - Продукт',
+        'products': Product.objects.filter(id=id) ,
+    }
+    return render(request, 'mainapp/products.html', context)
+
+
