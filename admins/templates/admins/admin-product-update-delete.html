@@ -4,22 +4,22 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
-            <h1 class="mt-4">Редактирование пользователя | {{ user_select.username }} </h1>
+            <h1 class="mt-4">Редактирование товара | {{ select_product.name }} </h1>
             <div class="card-body">
-                <form action="{% url 'admins:admin_users_update' user_select.id %}" method="post"
+                <form action="{% url 'admins:admin_products_update' select_product.id %}" method="post"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.first_name.id_for_label }}">Имя</label>
-                                {{ form.first_name }}
+                                <label class="small mb-1" for="{{ form.name.id_for_label }}">Наименование</label>
+                                {{ form.name }}
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Фамилия</label>
-                                {{ form.last_name }}
+                                <label class="small mb-1" for="{{ form.category.id_for_label }}">Категория</label>
+                                {{ form.category }}
                             </div>
                         </div>
                     </div>
@@ -33,20 +33,26 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-lg-5">
-                            <label class="small mb-1" for="{{ form.username.id_for_label }}">Имя
-                                пользователя</label>
-                            {{ form.username }}
+
+                        <div class="col-lg-8">
+                            <label class="small mb-1" for="{{ form.description.id_for_label }}">Описание</label>
+                            {{ form.description }}
                         </div>
-                        <div class="col-lg-5">
-                            <label class="small mb-1" for="{{ form.email.id_for_label }}">Адрес электронной
-                                почты</label>
-                            {{ form.email }}
+                        <div class="col-lg-4">
+                            <label class="small mb-1" for="{{ form.short_desc.id_for_label }}">Короткое описание</label>
+                            {{ form.short_desc }}
                         </div>
-                        <div class="col-lg-2">
-                            <label class="small mb-1" for="{{ form.age.id_for_label }}">Возраст
-                                почты</label>
-                            {{ form.age }}
+
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ form.price.id_for_label }}">Цена</label>
+                            {{ form.price }}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ form.quantity.id_for_label }}">Остаток</label>
+                            {{ form.quantity }}
                         </div>
                     </div>
                     <div class="form-row">
@@ -55,7 +61,8 @@
                         </div>
                     </div>
                 </form>
-                <form action="{% url 'admins:admin_users_delete' user_select.id %}" method="post">
+
+                <form action="{% url 'admins:admin_products_delete' select_product.id %}" method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-lg-12" style="margin-top: 33px;">
@@ -63,6 +70,7 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </main>
