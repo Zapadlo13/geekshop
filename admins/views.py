@@ -2,12 +2,16 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, HttpResponseRedirect
 
 # Create your views here.
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAdminRegisterForm, \
     CategoryAdminProfileForm, ProductAdminRegisterForm, ProductAdminProfileForm
 from authapp.models import User
+from mainapp.mixin import UserDispatchMixin, BaseClassContextMixin
 from mainapp.models import ProductCategory, Product
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def index(request):
@@ -17,155 +21,102 @@ def index(request):
     }
     return render(request, 'admins/admin.html', context)
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users(request):
-    context = {
-        'title': 'GeekShop - Admin |Список пользователей ',
-        'users': User.objects.all()
-    }
-    return render(request, 'admins/admin-users-read.html', context)
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_create(request):
-    if request.method == 'POST':
-        form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_users'))
-    else:
-        form = UserAdminRegisterForm()
+# Users
+class UsersListView(ListView, BaseClassContextMixin, UserDispatchMixin):
+    model = User
+    template_name = 'admins/admin-users-read.html'
+    title = 'GeekShop - Admin |Список пользователей'
 
-    context = {
-        'title': 'GeekShop - Admin |Новый пользователь  ',
-        'form': form
-    }
-    return render(request, 'admins/admin-users-create.html', context)
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_update(request, pk):
-    user_select = User.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = UserAdminProfileForm(instance=user_select, data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_users'))
-    else:
-        form = UserAdminProfileForm(instance=user_select)
+class UsersCreateView(CreateView, BaseClassContextMixin, UserDispatchMixin):
+    model = User
+    template_name = 'admins/admin-users-create.html'
+    form_class = UserAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_users')
+    title = 'GeekShop - Admin |Новый пользователь'
 
-    context = {
-        'title': 'GeekShop - Admin |' + user_select.username,
-        'form': form,
-        'user_select': user_select
 
-    }
-    return render(request, 'admins/admin-users-update-delete.html', context)
+class UsersUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    model = User
+    template_name = 'admins/admin-users-update-delete.html'
+    form_class = UserAdminProfileForm
+    success_url = reverse_lazy('admins:admin_users')
+    title = 'GeekShop - Admin |Обновление данных'
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_users_delete(request, pk):
-    if request.method == 'POST':
-        user = User.objects.get(pk=pk)
-        user.is_active = False
-        user.save()
-    return HttpResponseRedirect(reverse('admins:admin_users'))
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_category(request):
-    context = {
-        'title': 'GeekShop - Admin |Список категорий ',
-        'categories': ProductCategory.objects.all()
-    }
-    return render(request, 'admins/admin-category-read.html', context)
+class UsersDeleteView(DeleteView, UserDispatchMixin):
+    model = User
+    template_name = 'admins/admin-users-update-delete.html'
+    success_url = reverse_lazy('admins:admin_users')
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_category_create(request):
-    if request.method == 'POST':
-        form = CategoryAdminRegisterForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_category'))
-    else:
-        form = CategoryAdminRegisterForm()
+    def delete(self, request, *args, **kwargs):
 
-    context = {
-        'title': 'GeekShop - Admin |Новая категория',
-        'form': form
-    }
-    return render(request, 'admins/admin-category-create.html', context)
+        self.object = self.get_object()
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_category_update(request, pk):
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
 
-    select_category = ProductCategory.objects.get(pk=pk)
+        return HttpResponseRedirect(reverse('admins:admin_users'))
 
-    if request.method == 'POST':
-        form = CategoryAdminProfileForm(instance=select_category, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_category'))
-    else:
-        form = CategoryAdminProfileForm(instance=select_category)
 
-    context = {
-        'title': 'GeekShop - Admin |' + select_category.name,
-        'form': form,
-        'select_category': select_category
-    }
-    return render(request, 'admins/admin-category-update-delete.html', context)
+# Categories
+class CategoryListView(ListView, BaseClassContextMixin, UserDispatchMixin):
+    model = ProductCategory
+    template_name = 'admins/admin-category-read.html'
+    title = 'GeekShop - Admin |Список категорий '
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_category_delete(request, pk):
-    if request.method == 'POST':
-        select_categogy = ProductCategory.objects.get(pk=pk)
-        select_categogy.delete()
-    return HttpResponseRedirect(reverse('admins:admin_category'))
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_products(request):
-    context = {
-        'title': 'GeekShop - Admin |Список товаров ',
-        'products': Product.objects.all()
-    }
-    return render(request, 'admins/admin-product-read.html', context)
+class CategoryCreateView(CreateView, BaseClassContextMixin, UserDispatchMixin):
+    model = ProductCategory
+    template_name = 'admins/admin-category-create.html'
+    form_class = CategoryAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_category')
+    title = 'GeekShop - Admin |Новая категория'
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_products_create(request):
-    if request.method == 'POST':
-        form = ProductAdminRegisterForm(data=request.POST,files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_products'))
-    else:
-        form = ProductAdminRegisterForm()
 
-    context = {
-        'title': 'GeekShop - Admin |Новый товар',
-        'form': form
-    }
-    return render(request, 'admins/admin-product-create.html', context)
+class CategoryUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    model = ProductCategory
+    template_name = 'admins/admin-category-update-delete.html'
+    form_class = CategoryAdminProfileForm
+    success_url = reverse_lazy('admins:admin_products')
+    title = 'GeekShop - Admin |Обновление данных'
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_products_update(request, pk):
 
-    select_product = Product.objects.get(pk=pk)
+class CategoryDeleteView(DeleteView, UserDispatchMixin):
+    model = ProductCategory
+    template_name = 'admins/admin-users-update-delete.html'
+    success_url = reverse_lazy('admins:admin_products')
 
-    if request.method == 'POST':
-        form = ProductAdminProfileForm(instance=select_product, data=request.POST,files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('admins:admin_products'))
-    else:
-        form = ProductAdminProfileForm(instance=select_product)
 
-    context = {
-        'title': 'GeekShop - Admin |' + select_product.name,
-        'form': form,
-        'select_product': select_product
-    }
-    return render(request, 'admins/admin-product-update-delete.html', context)
+# Products
+class ProductListView(ListView, BaseClassContextMixin, UserDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-product-read.html'
+    title = 'GeekShop - Admin |Список товаров '
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_products_delete(request, pk):
-    if request.method == 'POST':
-        select_product = Product.objects.get(pk=pk)
-        select_product.delete()
-    return HttpResponseRedirect(reverse('admins:admin_products'))
+
+class ProductCreateView(CreateView, BaseClassContextMixin, UserDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-product-create.html'
+    form_class = ProductAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_products')
+    title = 'GeekShop - Admin |Новый товар'
+
+
+class ProductUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-product-update-delete.html'
+    form_class = ProductAdminProfileForm
+    success_url = reverse_lazy('admins:admin_products')
+    title = 'GeekShop - Admin |Обновление данных'
+
+
+class ProductDeleteView(DeleteView, UserDispatchMixin):
+    model = Product
+    template_name = 'admins/admin-product-update-delete.html'
+    form_class = ProductAdminProfileForm
+    success_url = reverse_lazy('admins:admin_products')
