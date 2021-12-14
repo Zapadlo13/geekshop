@@ -20,7 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ssm-x*z%!k@9xmrs8at@3$-2z76ia60nrz556fv848y2@al6$r'
-
+from dotenv import load_dotenv
+load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -139,8 +140,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True if os.getenv('EMAIL_USE_SSL') == 'True' else False
 
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = 'tmp/emails/'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/emails/'
 
 EMAIL_HOST_USER ,EMAIL_HOST_PASSWORD = None,None
 # python -m smtpd -n -c DebuggingServer localhost:25

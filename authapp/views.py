@@ -28,11 +28,18 @@ class RegisterFormView(FormView, BaseClassContextMixin):
     success_url = reverse_lazy('authapp:login')
     title = 'GeekShop | Регистрация'
 
-    @staticmethod
-    def post(request):
-        form = UserRegisterForm(data=request.POST)
+    def post(self, request, *args, **kwargs):
+
+        form = self.form_class(data=request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            if self.send_verify_link(user):
+                messages.set_level(request, messages.SUCCESS)
+                messages.success(request, 'Вы успешно зарегистрировались!')
+                return HttpResponseRedirect(reverse('authapp:login'))
+            else:
+                messages.set_level(request, messages.ERROR)
+                messages.error(request, form.errors)
             messages.success(request, 'Регистрация выполненна успешна')
             return HttpResponseRedirect(reverse('authapp:login'))
 
@@ -61,7 +68,6 @@ class Logout(LogoutView):
 
 
 class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
-    model = User
     template_name = 'authapp/profile.html'
     form_class = UserProfileForm
     success_url = reverse_lazy('authapp:profile')
