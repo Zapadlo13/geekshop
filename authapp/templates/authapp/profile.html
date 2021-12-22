@@ -78,6 +78,24 @@
                             <label class="small mb-1" for="{{ form.age.id_for_label }}">Возраст</label>
                             {{ form.age }}
                         </div>
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ profile.gender.id_for_label }}">Пол</label>
+                            {{ profile.gender }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ profile.about.id_for_label }}">О себе
+                            </label>
+                            {{ profile.about }}
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label class="small mb-1" for="{{ profile.lang.id_for_label }}">Язык</label>
+                            {{ profile.lang }}
+                        </div>
+
                     </div>
                     <div class="form-row">
                         <div class="col-lg-12" style="margin-top: 33px;">
@@ -88,8 +106,8 @@
             </div>
             <div class="col-lg-5">
 
-                    {% include 'basketsapp/basket.html' %}
-                          </div>
+                {% include 'basketsapp/basket.html' %}
+            </div>
         </div>
     </div>
 {% endblock %}
