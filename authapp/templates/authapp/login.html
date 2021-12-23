@@ -1,10 +1,12 @@
 {% extends 'authapp/base.html' %}
+{% load static %}
 
 {% block content %}
 
     <div class="col-lg-5">
         {% if form.non_field_errors  or messages %}
-            <div class="alert {% if messages %} alert-success  {% else %} alert-warning  {% endif %} alert-dismissible fade show" role="alert"
+            <div class="alert {% if messages %} alert-success  {% else %} alert-warning  {% endif %} alert-dismissible fade show"
+                 role="alert"
                  style="margin-top: 50px;">
                 {% if messages %}
                     {% for messag in messages %}
@@ -42,6 +44,13 @@
                     </div>
                 </form>
             </div>
+
+            <div class="card-footer text-center">
+                <div class="small"><a href="{% url 'social:begin' 'vk-oauth2' %}"><img src="{% static 'vk.png' %}" class="avatar-3"
+                                                                   data-toggle="tooltip">
+                </a></div>
+            </div>
+
             <div class="card-footer text-center">
                 <div class="small"><a href="{% url 'authapp:register' %}">Нужен аккаунт? Зарегистрируйся!</a></div>
             </div>
