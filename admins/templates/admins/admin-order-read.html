@@ -1,0 +1,65 @@
+{% extends 'admins/base.html' %}
+
+{% block context %}
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Заказы</h1>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Заказы
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Номер</th>
+                                    <th>Пользователь</th>
+                                    <th>Создан</th>
+                                    <th>Обновлен</th>
+                                    <th>Статус</th>
+                                    <th>Активен</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>Номер</th>
+                                    <th>Пользователь</th>
+                                    <th>Создан</th>
+                                    <th>Обновлен</th>
+                                    <th>Статус</th>
+                                    <th>Активен</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                {% for order in object_list %}
+                                    <tr>
+                                        <td><a href="{% url 'admins:admin_orders_update'  order.id %}"
+                                               style="color: dodgerblue">{{ order.id }}</a>
+                                        </td>
+                                        <td>{{ order.user }}</td>
+                                        <td>{{ order.created }}</td>
+                                        <td>{{ order.updated }}</td>
+                                        <td>{{ order.status }}</td>
+                                        <td>{{ order.is_active }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; GeekShop 2021</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+{% endblock %}
