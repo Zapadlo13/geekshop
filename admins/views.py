@@ -7,10 +7,12 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAdminRegisterForm, \
-    CategoryAdminProfileForm, ProductAdminRegisterForm, ProductAdminProfileForm
+    CategoryAdminProfileForm, ProductAdminRegisterForm, ProductAdminProfileForm, OrderAdminProfileForm, \
+    OrderItemAdminProfileForm
 from authapp.models import User
 from mainapp.mixin import UserDispatchMixin, BaseClassContextMixin
 from mainapp.models import ProductCategory, Product
+from ordersapp.models import Order, OrderItem
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -120,3 +122,22 @@ class ProductDeleteView(DeleteView, UserDispatchMixin):
     template_name = 'admins/admin-product-update-delete.html'
     form_class = ProductAdminProfileForm
     success_url = reverse_lazy('admins:admin_products')
+
+
+class OrderListView(ListView, BaseClassContextMixin, UserDispatchMixin):
+    model = Order
+    template_name = 'admins/admin-order-read.html'
+    title = 'GeekShop - Admin |Список заказов'
+
+
+class OrderUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    model = Order
+    template_name = 'admins/admin-order-update-delete.html'
+    form_class = OrderAdminProfileForm
+    success_url = reverse_lazy('admins:admin_orders')
+    title = 'GeekShop - Admin |Обновление данных'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(OrderUpdateView, self).get_context_data(**kwargs)
+    #     context['orderitem'] = OrderItemAdminProfileForm(instance=OrderItem.objects.filter(order_id=self.object.pk))
+    #     return context
