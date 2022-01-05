@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def index(request):
     context = {
         'title': 'GeekShop',
-        'products': Product.objects.all(),
+        'products': Product.objects.all().select_related('category') ,
     }
     return render(request, 'mainapp/index.html', context)
 
