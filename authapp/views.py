@@ -85,7 +85,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_object(self, *args, **kwargs):
-        #return get_object_or_404(User, pk=self.request.user.pk)
+        ##return get_object_or_404(User, pk=self.request.user.pk)
         return User.objects.filter().select_related(pk=self.request.user.pk).select_related('userprofile')
 
 
