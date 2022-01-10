@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 
 from basketsapp.models import Basket
 from mainapp.mixin import BaseClassContextMixin
-from mainapp.models import Product
+from mainapp.models import Product,ProductCategory
 from ordersapp.forms import OrderForm, OrderItemsForm
 from ordersapp.models import Order, OrderItem
 
@@ -80,12 +80,12 @@ class OrderUpdate(UpdateView):
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
             formset = OrderFormSet(instance=self.object)
-            field_queryset = Order.objects.all()
+            productcategory_queryset = ProductCategory.objects.all()
 
             for form in formset:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
-                    form.fields['test_field'].queryset = field_queryset
+                    form.fields['productcategory'].queryset = productcategory_queryset
 
         context['orderitems'] = formset
         return context
