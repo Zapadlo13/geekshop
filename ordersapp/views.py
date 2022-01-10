@@ -80,12 +80,12 @@ class OrderUpdate(UpdateView):
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
             formset = OrderFormSet(instance=self.object)
-            productcategory_queryset = ProductCategory.objects.all()
+            #productcategory_queryset = ProductCategory.objects.all()
 
             for form in formset:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
-                    form.initial['productcategory'].queryset = productcategory_queryset
+                    #form.initial['productcategory'].queryset = productcategory_queryset
 
         context['orderitems'] = formset
         return context
