@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib import auth, messages
-from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
@@ -10,7 +9,6 @@ from django.views.generic import FormView, UpdateView
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from authapp.models import User
-from basketsapp.models import Basket
 from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin
 
 
@@ -87,7 +85,8 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_object(self, *args, **kwargs):
-        return get_object_or_404(User, pk=self.request.user.pk)
+        #return get_object_or_404(User, pk=self.request.user.pk)
+        return  User.objects.get(pk=self.request.user.pk).select_related('userprofile')
 
     def get_context_data(self, **kwargs):
         context = super(ProfileFormView, self).get_context_data(**kwargs)
