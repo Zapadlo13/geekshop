@@ -9,6 +9,29 @@
 {% block content %}
     <div class="container">
 
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Bootstrap</strong>
+                <small class="text-muted">11 мин. назад</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            </div>
+            <div class="toast-body">
+                Привет мир! Это тост-сообщение.
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive"
+             aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Привет, мир! Это тост-сообщение2.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Закрыть"></button>
+            </div>
+        </div>
+
         <div class="row">
 
             <div class="col-lg-3">
@@ -56,43 +79,20 @@
                     </a>
                 </div>
 
-                <div class="row">
-                    {% for product in products %}
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="card h-100">
-                                <a href="#">
-                                    <img class="card-img-top"
-                                         src="{{ product.image.url }}"
-                                         alt="">
-                                </a>
-                                <div class="card-body">
-                                    <h4 class="card-title">
-                                        <a href="{% url 'mainapp:detail' product.id %}">{{ product.name }}</a>
-                                    </h4>
-                                    <h5>{{ product.price }} руб.</h5>
-                                    <p class="card-text">{{ product.description }}</p>
-                                </div>
-                                <div class="card-footer text-center">
-                                    <a href="{% url 'basketsapp:basket_add' product.id%}" class="btn btn-outline-success">Отправить в корзину</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                </div>
+                {% include 'mainapp/includes/card.html' %}
 
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item {% if  not products.has_previous %} disabled {% endif %}">
-                            <a class="page-link"
-                               href={% if products.has_previous %} {% url 'mainapp:page' products.previous_page_number %} {% endif %}" tabindex="
-                               -1" aria-disabled="true">Previous</a>
+                            <a> href="{% if products.has_previous %}
+                                {% url 'mainapp:page' products.previous_page_number %} {% endif %} "tabindex="-1"
+                                aria-disabled="true">Previous</a>
                         </li>
                         {% for page in products.paginator.page_range %}
                             <li class="page-item"><a class="page-link"
                                                      href="{% url 'mainapp:page' page %}">{{ page }}</a></li>
                         {% endfor %}
-                    
+
                         <li class="page-item {% if  not products.has_next %} disabled {% endif %}">
                             <a class="page-link "
                                href="{% if products.has_next %} {% url 'mainapp:page' products.next_page_number %} {% endif %}">Next</a>

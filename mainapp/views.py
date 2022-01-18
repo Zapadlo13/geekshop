@@ -14,22 +14,22 @@ def get_link_category():
         key = 'link_category'
         link_category = cache.get(key)
         if link_category is None:
-            link_category = ProductCategory.objects.all()
+            link_category = ProductCategory.objects.filter(is_active= True)
             cache.set(key,link_category)
         return link_category
     else:
-        return ProductCategory.objects.all()
+        return ProductCategory.objects.filter(is_active= True)
 
 def get_link_product():
     if settings.LOW_CACHE:
         key = 'link_product'
         link_product = cache.get(key)
         if link_product is None:
-            link_product = Product.objects.all().select_related('category')
+            link_product = Product.objects.filter(is_active= True).select_related('category')
             cache.set(key,link_product)
         return link_product
     else:
-        return Product.objects.all().select_related('category')
+        return Product.objects.filter(is_active= True).select_related('category')
 
 
 def get_product(pk):
@@ -47,16 +47,16 @@ def get_product(pk):
 def index(request):
     context = {
         'title': 'GeekShop',
-        'products': Product.objects.all().select_related('category') ,
+        'products': Product.objects.filter(is_active= True).select_related('category') ,
     }
     return render(request, 'mainapp/index.html', context)
 
 
 def products(request, id_category=None, page=1):
     if id_category:
-        products = Product.objects.filter(category_id=id_category).select_related('category')
+        products = Product.objects.filter(category_id=id_category, is_active= True).select_related('category')
     else:
-        products = Product.objects.all().select_related('category')
+        products = Product.objects.filter(is_active= True).select_related('category')
 
     paginator = Paginator(products, 3)
 

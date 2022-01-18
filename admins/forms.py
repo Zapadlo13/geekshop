@@ -61,7 +61,7 @@ class CategoryAdminProfileForm(forms.ModelForm):
 class ProductAdminRegisterForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity')
+        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity','is_active')
 
     def __init__(self, *args, **kwargs):
         super(ProductAdminRegisterForm, self).__init__(*args, **kwargs)
@@ -75,7 +75,7 @@ class ProductAdminRegisterForm(forms.ModelForm):
 class ProductAdminProfileForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity')
+        fields = ('category', 'name', 'image', 'short_desc', 'description', 'price', 'quantity','is_active')
 
     def __init__(self, *args, **kwargs):
         super(ProductAdminProfileForm, self).__init__(*args, **kwargs)
