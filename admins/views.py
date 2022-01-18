@@ -84,15 +84,26 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-category-update-delete.html'
     form_class = CategoryAdminProfileForm
-    success_url = reverse_lazy('admins:admin_products')
+    success_url = reverse_lazy('admins:admin_category')
     title = 'GeekShop - Admin |Обновление данных'
 
 
 class CategoryDeleteView(DeleteView, UserDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-users-update-delete.html'
-    success_url = reverse_lazy('admins:admin_products')
+    success_url = reverse_lazy('admins:admin_category')
 
+    def delete(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
+
+        return HttpResponseRedirect(reverse('admins:admin_category'))
 
 # Products
 class ProductListView(ListView, BaseClassContextMixin, UserDispatchMixin):
@@ -123,6 +134,17 @@ class ProductDeleteView(DeleteView, UserDispatchMixin):
     form_class = ProductAdminProfileForm
     success_url = reverse_lazy('admins:admin_products')
 
+    def delete(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
+
+        return HttpResponseRedirect(reverse('admins:admin_products'))
 
 class OrderListView(ListView, BaseClassContextMixin, UserDispatchMixin):
     model = Order
