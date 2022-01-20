@@ -155,8 +155,14 @@ window.onload = function () {
                 url: "/baskets/add/" + t_href + "/",
                 success: function (data) {
                     $('.card_add_basket').html(data.result)
-                    $('.toast').toast('show');
-                    alert('товар добавлен вы корзину!!!')
+
+                   new Toast({
+                        title: false,
+                        text: "Товар добавлен в корзину",
+                        theme: "success",
+                        autohide: true,
+                        interval: 2000
+                      });
                 },
             });
         event.preventDefault()

@@ -3,34 +3,12 @@
 
 {% block css %}
     <link href="{% static 'css/products.css' %}" rel="stylesheet">
+    <link href="{% static 'css/toast.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 
 {% block content %}
-    <div class="container">
-
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <img src="..." class="rounded me-2" alt="...">
-                <strong class="me-auto">Bootstrap</strong>
-                <small class="text-muted">11 мин. назад</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
-            </div>
-            <div class="toast-body">
-                Привет мир! Это тост-сообщение.
-            </div>
-        </div>
-
-        <div class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive"
-             aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Привет, мир! Это тост-сообщение2.
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Закрыть"></button>
-            </div>
-        </div>
+    <div class="container ">
 
         <div class="row">
 
@@ -84,9 +62,9 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item {% if  not products.has_previous %} disabled {% endif %}">
-                            <a> href="{% if products.has_previous %}
-                                {% url 'mainapp:page' products.previous_page_number %} {% endif %} "tabindex="-1"
-                                aria-disabled="true">Previous</a>
+                            <a class="page-link"
+                               href={% if products.has_previous %} {% url 'mainapp:page' products.previous_page_number %} {% endif %}" tabindex="
+                               -1" aria-disabled="true">Previous</a>
                         </li>
                         {% for page in products.paginator.page_range %}
                             <li class="page-item"><a class="page-link"
