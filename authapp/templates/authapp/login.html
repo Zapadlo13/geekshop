@@ -46,9 +46,16 @@
             </div>
 
             <div class="card-footer text-center">
-                <div class="small"><a href="{% url 'social:begin' 'vk-oauth2' %}"><img src="{% static 'vk.png' %}" class="avatar-3"
-                                                                   data-toggle="tooltip">
-                </a></div>
+                <div class="small"><a href="{% url 'social:begin' 'vk-oauth2' %}"><img src="{% static 'vk.png' %}"
+                                                                                       class="avatar-3"
+                                                                                       data-toggle="tooltip">
+                </a>
+
+
+                    <a href="{% url "social:begin" "google-oauth2" %}"><img src="{% static 'google.png' %}"
+                                                                           class="avatar-3"
+                                                                           data-toggle="tooltip"></a>
+              </div>
             </div>
 
             <div class="card-footer text-center">
