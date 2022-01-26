@@ -29,11 +29,12 @@ urlpatterns = [
     path('baskets/', include('basketsapp.urls', namespace='basketsapp')),
     path('admins/', include('admins.urls', namespace='admins')),
     path('orders/', include('ordersapp.urls', namespace='orders')),
+    path('stores/', include('storesapp.urls', namespace='stores')),
 
     path('', include('social_django.urls', namespace='social')),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 if settings.DEBUG:
-    urlpatterns += [re_path(r'^__debug__/', include(debug_toolbar.urls))]
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path('debug/', include(debug_toolbar.urls))]
+

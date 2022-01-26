@@ -25,9 +25,9 @@ window.onload = function () {
     //
     // 1метод
     $('.order_form').on('click', 'input[type=number]', function () {
+
         let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-quantity', ''));
-
         if (price_arr[orderitem_num]) {
             orderitem_quantity = parseInt(target.value);
             delta_quantity = orderitem_quantity - quantity_arr[orderitem_num];
@@ -38,7 +38,7 @@ window.onload = function () {
 
     // 2 метод
     $('.order_form').on('click', 'input[type=checkbox]', function () {
-         console.log('type=checkbox')
+
         let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-DELETE', ''));
         if (target.checked) {
@@ -93,7 +93,7 @@ window.onload = function () {
                         }
                         let price_html = '<span class="orderitems-' + orderitem_num + '-price">'
                             + data.price.toString().replace('.', ',') + '</span> руб';
-                        let current_tr = $('.order_form table').find('tr:eq('+(orderitem_num+1)+')');
+                        let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html)
                     }
                 }
@@ -104,10 +104,8 @@ window.onload = function () {
 
     })
 
-
-}
-
- $('.order_form select').change(function () {
+    // $('.order_form select').change(function () {
+    $(document).on('change', '.order_form select', function () {
 
         let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
@@ -115,7 +113,7 @@ window.onload = function () {
 
         console.log(orderitem_num)
         console.log(orderitem_product_pk)
-        let price_arr =[]
+
         if (orderitem_product_pk) {
             $.ajax({
                 url: '/orders/product/' + orderitem_product_pk + '/price/',
@@ -127,7 +125,7 @@ window.onload = function () {
                         }
                         let price_html = '<span class="orderitems-' + orderitem_num + '-price">'
                             + data.price.toString().replace('.', ',') + '</span> руб';
-                        let current_tr = $('.order_form table').find('tr:eq('+(orderitem_num+1)+')');
+                        let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html)
                     }
                 }
@@ -137,3 +135,37 @@ window.onload = function () {
         }
 
     })
+
+    $('.basket_list').on('click', 'input[type="number"]', function () {
+        let t_href = event.target
+        $.ajax(
+            {
+                url: "/baskets/edit/" + t_href.name + "/" + t_href.value + "/",
+                success: function (data) {
+                    $('.basket_list').html(data.result)
+                },
+            });
+        event.preventDefault()
+    })
+
+    $('.card_add_basket').on('click', 'button[type="button"]', function () {
+        let t_href = event.target.value
+        $.ajax(
+            {
+                url: "/baskets/add/" + t_href + "/",
+                success: function (data) {
+                    $('.card_add_basket').html(data.result)
+
+                   new Toast({
+                        title: false,
+                        text: "Товар добавлен в корзину",
+                        theme: "success",
+                        autohide: true,
+                        interval: 2000
+                      });
+                },
+            });
+        event.preventDefault()
+    })
+
+}
