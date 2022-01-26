@@ -99,9 +99,13 @@ class CategoryDeleteView(DeleteView, UserDispatchMixin):
 
         if self.object.is_active:
             self.object.is_active = False
+            self.object.product_set.update(is_active =False)
         else:
             self.object.is_active = True
+            self.object.product_set.update(is_active=True)
         self.object.save()
+
+
 
         return HttpResponseRedirect(reverse('admins:admin_category'))
 
