@@ -8,11 +8,12 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryAdminRegisterForm, \
     CategoryAdminProfileForm, ProductAdminRegisterForm, ProductAdminProfileForm, OrderAdminProfileForm, \
-    OrderItemAdminProfileForm
+    OrderItemAdminProfileForm, StoreAdminRegisterForm
 from authapp.models import User
 from mainapp.mixin import UserDispatchMixin, BaseClassContextMixin
 from mainapp.models import ProductCategory, Product
 from ordersapp.models import Order, OrderItem
+from storesapp.models import Store
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -167,3 +168,46 @@ class OrderUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     #     context = super(OrderUpdateView, self).get_context_data(**kwargs)
     #     context['orderitem'] = OrderItemAdminProfileForm(instance=OrderItem.objects.filter(order_id=self.object.pk))
     #     return context
+
+
+
+# Stores
+class StoresListView(ListView, BaseClassContextMixin, UserDispatchMixin):
+    model = Store
+    template_name = 'admins/admin-stores-read.html'
+    title = 'GeekShop - Admin |Список пунктов выдачи'
+
+
+class StoresCreateView(CreateView, BaseClassContextMixin, UserDispatchMixin):
+    model = Store
+    template_name = 'admins/admin-stores-create.html'
+    form_class = StoreAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_stores')
+    title = 'GeekShop - Admin |Новый пункт выдачи'
+
+
+class StoresUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    model = Store
+    template_name = 'admins/admin-stores-update-delete.html'
+    form_class = StoreAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_stores')
+    title = 'GeekShop - Admin |Обновление данных'
+
+
+class StoresDeleteView(DeleteView, UserDispatchMixin):
+    model = Store
+    template_name = 'admins/admin-stores-update-delete.html'
+    success_url = reverse_lazy('admins:admin_stores')
+
+    def delete(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+
+        if self.object.is_active:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
+        self.object.save()
+
+        return HttpResponseRedirect(reverse('admins:admin_stores'))
+

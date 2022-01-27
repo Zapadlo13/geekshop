@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from authapp.models import User
 from mainapp.models import ProductCategory, Product
 from ordersapp.models import Order, OrderItem
+from storesapp.models import Store
 
 
 class UserAdminRegisterForm(UserCreationForm):
@@ -109,6 +110,20 @@ class OrderItemAdminProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(OrderItemAdminProfileForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+
+
+
+class StoreAdminRegisterForm(forms.ModelForm):
+
+    class Meta:
+        model = Store
+        fields = ('__all__')
+
+    def __init__(self, *args, **kwargs):
+        super(StoreAdminRegisterForm, self).__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
