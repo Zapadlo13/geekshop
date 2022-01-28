@@ -20,7 +20,11 @@ class Basket(models.Model):
         return self.user.basket.select_related()
 
     def summa(self):
-        return self.product.price * self.quantity
+        if self.product.discount != 0:
+            price =  self.product.price_discount
+        else:
+            price = self.product.price
+        return price * self.quantity
 
     def total_summa(self):
         baskets = self.get_items_cached
