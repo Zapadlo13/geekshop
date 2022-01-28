@@ -20,6 +20,7 @@ class Product(models.Model):
     price = models.DecimalField(verbose_name='цена продукта', max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveIntegerField(verbose_name='количество на складе', default=0)
     discount = models.PositiveIntegerField(verbose_name='скидка', default=0)
+    price_discount = models.DecimalField(verbose_name='цена со скидкой', max_digits=8, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

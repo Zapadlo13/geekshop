@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import F
 from django.shortcuts import render, HttpResponseRedirect
 
 # Create your views here.
@@ -90,9 +91,10 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.discount != int(request.POST.get('discount')):
-            self.object.product_set.update(discount=int(request.POST.get('discount')))
-
+        discount = int(request.POST.get('discount'))
+        if self.object.discount != discount:
+            self.object.product_set.update(discount=discount)
+            self.object.product_set.update(price_discount=F('price') * (1 - discount / 100))
         return super(CategoryUpdateView, self).post(request, **kwargs)
 
 
