@@ -44,15 +44,19 @@
 
                     </div>
                     <div class="form-row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <label class="small mb-1" for="{{ form.price.id_for_label }}">Цена</label>
                             {{ form.price }}
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <label class="small mb-1" for="{{ form.discount.id_for_label }}">Скидка</label>
                             {{ form.discount }}
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
+                            <label class="small mb-1" for="{{ form.price_discount.id_for_label }}">Цена со скидкой</label>
+                            {{ form.price_discount }}
+                        </div>
+                        <div class="col-lg-3">
                             <label class="small mb-1" for="{{ form.quantity.id_for_label }}">Остаток</label>
                             {{ form.quantity }}
                         </div>
