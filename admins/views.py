@@ -88,6 +88,15 @@ class CategoryUpdateView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     success_url = reverse_lazy('admins:admin_category')
     title = 'GeekShop - Admin |Обновление данных'
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.discount != int(request.POST.get('discount')):
+            self.object.product_set.update(discount=int(request.POST.get('discount')))
+
+        return super(CategoryUpdateView, self).post(request, **kwargs)
+
+
+
 
 class CategoryDeleteView(DeleteView, UserDispatchMixin):
     model = ProductCategory
@@ -105,8 +114,6 @@ class CategoryDeleteView(DeleteView, UserDispatchMixin):
             self.object.is_active = True
             self.object.product_set.update(is_active=True)
         self.object.save()
-
-
 
         return HttpResponseRedirect(reverse('admins:admin_category'))
 
