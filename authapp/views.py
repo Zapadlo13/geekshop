@@ -1,13 +1,15 @@
 from django.conf import settings
 from django.contrib import auth, messages
+from django.contrib.auth.forms import PasswordResetForm
 
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
+
 from django.views.generic import FormView, UpdateView
 
-from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm, UserEmailForm
 from authapp.models import User
 from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin
 
@@ -47,7 +49,6 @@ class RegisterFormView(FormView, BaseClassContextMixin):
         subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
         message = f'Для подтверждения учетной записи {user.username}  на портале \n {settings.DOMAIN_NAME}{verify_link}'
         return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-
 
     def verify(request, email, activate_key):
         try:
@@ -97,3 +98,33 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         context = super(ProfileFormView, self).get_context_data(**kwargs)
         context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
         return context
+
+
+
+class PasswordResetView(FormView, BaseClassContextMixin):
+    template_name = 'authapp/password_change.html'
+    form_class = UserEmailForm
+    success_url = reverse_lazy('index')
+
+    def post(self, request ):
+        form = PasswordResetForm(data=request.POST)
+        if form.is_valid():
+            user = User.objects.get(email=form.data.get('email'))
+            if user:
+                password = User.objects.make_random_password()
+                user.set_password(password)
+                user.save(update_fields=['password'])
+                subject = f'Изменения пароля'
+                message = f'Ваш новый пороль: {password} \n {settings.DOMAIN_NAME}'
+
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [form.data.get('email')],
+                                 fail_silently=False)
+
+                messages.set_level(request, messages.SUCCESS)
+                messages.success(request,
+                                 'Пароль изменен! \n На указанный email было отправлено письмо c новым паролем.')
+                return HttpResponseRedirect(reverse('authapp:login'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
+        else:
+            return HttpResponseRedirect(reverse('index'))

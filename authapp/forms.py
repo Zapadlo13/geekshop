@@ -21,6 +21,20 @@ class UserLoginForm(AuthenticationForm):
             field.widget.attrs['class'] = 'form-control py-4'
 
 
+
+class UserEmailForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email',)
+
+    def __init__(self, *args, **kwargs):
+        super(UserEmailForm, self).__init__(*args, **kwargs)
+
+        self.fields['email'].widget.attrs['placeholder'] = 'Введите адрес эл. почты'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control py-4'
+
 class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
@@ -39,11 +53,14 @@ class UserRegisterForm(UserCreationForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
 
+    def get_activation_key(user):
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        return hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save()
         user.is_active = False
-        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
-        user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+        user.activation_key = UserRegisterForm.get_activation_key(user)
         user.save()
         return user
 
