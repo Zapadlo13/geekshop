@@ -58,7 +58,7 @@ class RegisterFormView(FormView, BaseClassContextMixin):
                 user.activation_key_expires = None
                 user.is_active = True
                 user.save()
-                auth.login(request, user)
+                #auth.login(request, user)
                 return render(request, 'authapp/verification.html')
             else:
                 print(f'error activation user: {user}')
